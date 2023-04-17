@@ -1,7 +1,7 @@
 require('dotenv').config({path:'./config/.env'}); // Load environment variables from .env
 const express = require('express');
 const mongoose = require('mongoose');
-const User = require('./models/user');
+const User = require('./models/user');// Import the User model
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -9,7 +9,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   .catch(err => console.error('Failed to connect to MongoDB', err));
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;  // Set the port for the server to run on
 
 app.use(express.json()); // Parse JSON request bodies
 
@@ -18,19 +18,19 @@ app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
 // Route to get all users
 app.get('/users', async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
+    const users = await User.find();  // Retrieve all users from the database 
+    res.json(users);  // Send the users as JSON response
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message });  // Send error message if there's an error
   }
 });
 
 // Route to add a new user
 app.post("/users", async (req, res) => {
   try {
-    const { name, age } = req.body;
+    const { name, age } = req.body;  // Extract name and age from request body
     if (!name || !age) {
-      return res.status(400).json({ message: "Name and age are required" });
+      return res.status(400).json({ message: "Name and age are required" });  // Return error response if name and age are not provided
     }
     const user = new User({ name, age });
     await user.save();
